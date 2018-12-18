@@ -53,6 +53,8 @@
 
         <el-table
             :data="cacheData"
+            :cell-style="cellStyle"
+            :header-cell-style="rowClass"
             stripe
             ref="filterTable"
             border
@@ -126,7 +128,7 @@
         data() {
             return {
                 currentPage: 1,
-                pageSize: 20,
+                pageSize: 10,
                 id: 0,
                 wp_tag_id: 0,
                 wp_tag_name: '',
@@ -171,11 +173,7 @@
                             picker.$emit("pick", [start, end])
                         }
                     }]
-                },
-                xAxis: [],
-                yAxis: [],
-                dateTime1: '',
-                dateTime2: ''
+                }
             }
         },
         created() {
@@ -252,6 +250,12 @@
                     var dateTime2 = datetime2.getFullYear() + '-' + (datetime2.getMonth() + 1) + '-' + datetime2.getDate() + ' ' + datetime2.getHours() + ':' + datetime2.getMinutes() + ':' + datetime2.getSeconds();
                     this.dateTime = [dateTime1, dateTime2]
                 }
+            },
+            cellStyle({ row, column, rowIndex, columnIndex }) {
+                return "text-align:center"
+            },
+            rowClass({ row, rowIndex }) {
+                return "text-align:center"
             }
         },
         mounted() {

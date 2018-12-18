@@ -1,6 +1,6 @@
 <template>
-    <div id="main" style="width:1100px; height:600px">
-        <el-form :inline="true">
+    <div>
+        <el-form :inline="true" v-loading.fullscreen.lock="fullscreenLoading">
             <el-form-item>
                 <el-row class="demo-autocomplete">
                     <el-col>
@@ -50,6 +50,8 @@
                 <el-button @click="handleBtnClick">绘图</el-button>
             </el-form-item>
         </el-form>
+
+        <div id="chart" style="width:1000px; height:600px"></div>
     </div>
 </template>
 
@@ -60,25 +62,13 @@
     export default {
         data() {
             return {
-                currentPage: 1,
-                pageSize: 20,
-                id: 0,
-                wp_tag_id: 0,
-                wp_tag_name: '',
-                wp_group_id: 0,
-                wp_group_name: '',
-                wp_group_color: '',
-                wp_lang: '',
-                wp_group_link: '',
-                tt: '',
-                tableData: [],
-                cacheData: [],
+                fullscreenLoading: false,
                 wpTagName: '',
                 tagName: [],
                 wpLang: '',
                 lang: [],
                 totalNumber: 0,
-                dateTimePicker: '',
+                dateTimePicker: [new Date().getTime() - 3600*1000*24*90, new Date()],
                 dateTime: '',
                 pickerOptions: {
                     shortcuts: [{
@@ -105,6 +95,22 @@
                             start.setTime(start.getTime() - 3600*1000*24*90)
                             picker.$emit("pick", [start, end])
                         }
+                    }, {
+                        text: "最近半年",
+                        onClick(picker) {
+                            const end = new Date()
+                            const start = new Date()
+                            start.setTime(start.getTime() - 3600*1000*24*182)
+                            picker.$emit("pick", [start, end])
+                        }
+                    }, {
+                        text: "最近一年",
+                        onClick(picker) {
+                            const end = new Date()
+                            const start = new Date()
+                            start.setTime(start.getTime() - 3600*1000*24*365)
+                            picker.$emit("pick", [start, end])
+                        }
                     }]
                 },
                 xAxis: [],
@@ -112,9 +118,6 @@
                 dateTime1: '',
                 dateTime2: ''
             }
-        },
-        created() {
-            this.fetchData()
         },
         methods: {
             wpTagNameSearch(queryString, callback) {
@@ -129,15 +132,15 @@
             },
             loadTagName() {
                 return [
-                    {"value":"Social & Friendship"}, {"value":"Fan Clubs"}, 
-                    {"value":"+18"}, {"value":"All"}, {"value":"Funny"}, 
-                    {"value":"Relationships"}, {"value":"Games"}, {"value":"Food"}, 
-                    {"value":"Science & Tech"}, {"value":"Community"}, 
-                    {"value":"Art & Photography"}, {"value":"Roleplay"}, 
-                    {"value":"Business"}, {"value":"Buy and Sell"}, 
-                    {"value":"Spiritual"}, {"value":"Politics & News"}, 
-                    {"value":"Sports"}, {"value":"School & Education"}, 
-                    {"value":"Style"}, {"value":"Health & Fitness"}, 
+                    {"value":"Social & Friendship"}, {"value":"Fan Clubs"},
+                    {"value":"+18"}, {"value":"All"}, {"value":"Funny"},
+                    {"value":"Relationships"}, {"value":"Games"}, {"value":"Food"},
+                    {"value":"Science & Tech"}, {"value":"Community"},
+                    {"value":"Art & Photography"}, {"value":"Roleplay"},
+                    {"value":"Business"}, {"value":"Buy and Sell"},
+                    {"value":"Spiritual"}, {"value":"Politics & News"},
+                    {"value":"Sports"}, {"value":"School & Education"},
+                    {"value":"Style"}, {"value":"Health & Fitness"},
                     {"value":"Travel & Places"}, {"value":"Animals & Pets"}
                 ]
             },
@@ -191,9 +194,13 @@
                 console.log(this.yAxis)
             },
             async handleBtnClick() {
+                this.fullscreenLoading = true
+                setTimeout(() => {
+                    this.fullscreenLoading = false;
+                }, 2800)
                 await this.xAxisData()
                 await this.yAxisData()
-                var myChart = echarts.init(document.getElementById('main'))
+                var myChart = echarts.init(document.getElementById('chart'))
                 myChart.setOption({
                     tooltip: {},
                     xAxis: {
@@ -213,6 +220,9 @@
         mounted() {
             this.tagName = this.loadTagName()
             this.lang = this.loadLang()
-        },
+            this.$nextTick().then(() => {
+                this.handleBtnClick()
+            })
+        }
     }
 </script>
