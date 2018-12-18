@@ -1,5 +1,5 @@
 <template>
-    <div id="main">
+    <div id="main" style="width:1100px; height:600px">
         <el-form :inline="true">
             <el-form-item>
                 <el-row class="demo-autocomplete">
@@ -47,79 +47,14 @@
             </el-form-item>
 
             <el-form-item>
-                <el-button @click="fetchData">搜索</el-button>
+                <el-button @click="handleBtnClick">绘图</el-button>
             </el-form-item>
         </el-form>
-
-        <el-table
-            :data="cacheData"
-            stripe
-            ref="filterTable"
-            border
-            style="width:100%"
-            id="table">
-            <el-table-column
-                prop="id"
-                label="编号"
-                column-key="id">
-            </el-table-column>
-            <el-table-column
-                prop="wp_tag_id"
-                label="标签编号"
-                column-key="wp_tag_id">
-            </el-table-column>
-            <el-table-column
-                prop="wp_tag_name"
-                label="标签名"
-                column-key="wp_tag_name">
-            </el-table-column>
-            <el-table-column
-                prop="wp_group_id"
-                label="群组编号"
-                column-key="wp_group_id">
-            </el-table-column>
-            <el-table-column
-                prop="wp_group_name"
-                label="群组名"
-                column-key="wp_group_name">
-            </el-table-column>
-            <el-table-column
-                prop="wp_group_color"
-                label="群组颜色"
-                column-key="wp_group_color">
-            </el-table-column>
-            <el-table-column
-                prop="wp_lang"
-                label="语言"
-                column-key="wp_lang">
-            </el-table-column>
-            <el-table-column
-                prop="wp_group_link"
-                label="群组链接"
-                column-key="wp_group_link">
-            </el-table-column>
-            <el-table-column
-                prop="tt"
-                label="时间"
-                column-key="tt">
-            </el-table-column>
-        </el-table>
-
-        <el-pagination
-            background
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-sizes="[10, 20, 50, 100]"
-            :page-size="pageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="totalNumber">
-        </el-pagination>
     </div>
 </template>
 
 <script>
-    import { selectedUser } from '@/api/get/get.js'
+    import { makeChart } from '@/api/get/get.js'
     const echarts = require('echarts')
 
     export default {
@@ -182,23 +117,6 @@
             this.fetchData()
         },
         methods: {
-            fetchData() {
-                this.datetime()
-                selectedUser({"wp_tag_name": this.wpTagName, "wp_lang": this.wpLang, "tt1": this.dateTime[0], "tt2": this.dateTime[1], "pageSize": this.pageSize, "currentPage": this.currentPage}).then(response => {
-                    console.log(response.data.data)
-                    this.tableData = response.data.data[1]
-                    this.cacheData = response.data.data[1]
-                    this.totalNumber = response.data.data[0]
-                })
-            },
-            handleSizeChange: function(size) {
-                this.pageSize = size
-                this.fetchData()
-            },
-            handleCurrentChange: function(currentPage) {
-                this.currentPage = currentPage
-                this.fetchData()
-            },
             wpTagNameSearch(queryString, callback) {
                 var tagName = this.tagName
                 var results = queryString ? tagName.filter(this.createTagNameFilter(queryString)) : tagName
@@ -252,6 +170,44 @@
                     var dateTime2 = datetime2.getFullYear() + '-' + (datetime2.getMonth() + 1) + '-' + datetime2.getDate() + ' ' + datetime2.getHours() + ':' + datetime2.getMinutes() + ':' + datetime2.getSeconds();
                     this.dateTime = [dateTime1, dateTime2]
                 }
+            },
+            xAxisData() {
+                this.datetime()
+                var dateDiff = Math.floor((new Date(this.dateTime[1]).getTime()-new Date(this.dateTime[0]).getTime())/(1000*60*60*24))
+                var currentDateTime = new Date(this.dateTimePicker[1])
+                for (var i = 0; i < dateDiff; i++) {
+                    var formerDateTime = new Date(currentDateTime - 1000*60*60*24*i)
+                    formerDateTime = formerDateTime.getFullYear() + '-' + (formerDateTime.getMonth() + 1) + '-' + formerDateTime.getDate()
+                    this.xAxis.push(formerDateTime)
+                }
+                console.log(this.xAxis)
+            },
+            async yAxisData() {
+                this.datetime()
+                var dateDiff = Math.floor((new Date(this.dateTime[1]).getTime()-new Date(this.dateTime[0]).getTime())/(1000*60*60*24))
+                var currentDate = new Date(this.dateTimePicker[1])
+                var result = await makeChart({"wp_tag_name": this.wpTagName, "wp_lang": this.wpLang, "dateDiff": dateDiff, "currentDate": currentDate})
+                this.yAxis = result.data.data
+                console.log(this.yAxis)
+            },
+            async handleBtnClick() {
+                await this.xAxisData()
+                await this.yAxisData()
+                var myChart = echarts.init(document.getElementById('main'))
+                myChart.setOption({
+                    tooltip: {},
+                    xAxis: {
+                        type: 'category',
+                        data: this.xAxis
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        type: "line",
+                        data: this.yAxis
+                    }]
+                })
             }
         },
         mounted() {
