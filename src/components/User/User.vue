@@ -10,7 +10,6 @@
                             :fetch-suggestions="wpTagNameSearch"
                             placeholder="请输入您想查询的标签名"
                             prefix-icon="el-icon-search"
-                            :trigger-on-focus="false"
                             clearable>
                         </el-autocomplete>
                     </el-col>
@@ -26,7 +25,6 @@
                             :fetch-suggestions="wpLangSearch"
                             placeholder="请输入您想查询的语言"
                             prefix-icon="el-icon-search"
-                            :trigger-on-focus="false"
                             clearable>
                         </el-autocomplete>
                     </el-col>
