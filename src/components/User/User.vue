@@ -101,7 +101,8 @@
             <el-table-column
                 prop="tt"
                 label="时间"
-                column-key="tt">
+                column-key="tt"
+                :formatter="dateTimeFormatter">
             </el-table-column>
         </el-table>
 
@@ -270,6 +271,10 @@
             },
             rowClass({ row, rowIndex }) {
                 return "text-align:center"
+            },
+            dateTimeFormatter(row) {
+                const time = new Date(row.tt)
+                return time.getFullYear() + '-' + (time.getMonth() + 1) + '-' + time.getDate() + ' ' + time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds()
             }
         },
         mounted() {

@@ -4,9 +4,6 @@
             <el-col>
                 <el-menu
                     class="el-menu-vertical-demo"
-                    background-color="#545c64"
-                    text-color="#fff"
-                    active-text-color="#ffd04b"
                     router>
                     <el-menu-item index='/user'>
                         <i class="el-icon-service"></i>
