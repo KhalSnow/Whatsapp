@@ -11,7 +11,7 @@ const store = new Vuex.Store({
         login (state, payload) {
             state.user = payload
         },
-        logout (state) {
+        signup (state) {
             state.user = undefined
         }
     },
@@ -19,8 +19,8 @@ const store = new Vuex.Store({
         login (context, payload) {
             context.commit('login', payload)
         },
-        logout (context) {
-            context.commit('logout')
+        signup (context) {
+            context.commit('signup')
         }
     }
 })

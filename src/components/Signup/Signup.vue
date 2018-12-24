@@ -1,17 +1,17 @@
 <template>
     <el-row type="flex" justify="center">
-        <el-form ref="loginForm" :model="user" :rules="rules" status-icon>
+        <el-form :model="user" :rules="rules" ref="signupForm" label-width="100px" class="demo-user" status-icon>
             <el-form-item label="用户名" prop="name">
                 <el-input v-model="user.name" placeholder="请输入您的用户名" clearable></el-input>
             </el-form-item>
             <el-form-item label="密码" prop="password">
-                <el-input v-model="user.password" placeholder="请输入密码" type="password1" clearable></el-input>
+                <el-input type="password" v-model="user.password" placeholder="请输入密码" clearable></el-input>
             </el-form-item>
-            <el-form-item label="密码" prop="password">
-                <el-input v-model="user.password" placeholder="请再次输入密码" type="password2" clearable></el-input>
+            <el-form-item label="确认密码" prop="checkPassword">
+                <el-input type="password" v-model="user.checkPassword" placeholder="请再次输入密码" clearable></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" icon="el-icon-upload" @click="signup">注册</el-button>
+                <el-button type="primary" icon="el-icon-upload" @click="register">注册</el-button>
             </el-form-item>
         </el-form>
     </el-row>
@@ -22,45 +22,67 @@
 
     export default {
         data() {
+            var validatePassword = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error("请输入密码"))
+                } else {
+                    if (this.user.checkPassword !== '') {
+                        this.$refs.signupForm.validateField('checkPassword')
+                    }
+                    callback()
+                }
+            }
+            var validatePassword2 = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error("请再次输入密码"))
+                } else if (value !== this.user.password) {
+                    callback(new Error("两次输入密码不一致"))
+                } else {
+                    callback()
+                }
+            }
             return {
-                dialogVisible: false,
-                user: {name: "", password1: "", password2: ""},
+                activeName: 'second',
+                user: {name: "", password: "", checkPassword: ""},
                 rules: {
                     name: [
-                        {required: true, message: "用户名不能为空", trigger: "blur"}
+                        {required: true, message: "用户名不能为空", trigger: "blur"},
+                        {min:2, max:16, message: "长度在2-16个字符", trigger: "blur"}
                     ],
-                    password1: [
-                        {required: true, message: "密码不能为空", trigger: "blur"}
+                    password: [
+                        {required: true, validator: validatePassword, trigger: "blur"}
                     ],
-                    password2: [
-                        {required: true, message: "密码不能为空", trigger: "blur"}
+                    checkPassword: [
+                        {required: true, validator: validatePassword2, trigger: "blur"}
                     ]
                 }
             }
         },
         methods: {
-            signup() {
-                this.$refs.loginForm.validate((valid) => {
+            register() {
+                this.$refs.signupForm.validate((valid) => {
                     if (valid) {
-                        signUp({"name": this.user.name, "password": this.user.password}).then(response => {
+                        signUp({ "name": this.user.name, "password": this.user.password, "checkPassword": this.user.checkPassword}).then(response => {
                             console.log(response.data.data)
-                            if (response.data.data) {
-                                this.$store.dispatch('login', this.user).then(() => {
+                            if (response.data.data == true) {
+                                console.log(this.$store)
+                                this.$store.dispatch('signup', this.user).then(() => {
                                     this.$notify({
                                         type: 'success',
-                                        message: '欢迎您, ' + this.user.name,
+                                        message: '注册成功，请登陆',
                                         duration: 2000
                                     })
-                                    this.$router.replace("/user")
+                                    this.$router.replace("/login")
                                 })
                             } else {
                                 this.$message({
                                     type: 'error',
-                                    message: '用户名或密码错误',
+                                    message: '用户名已存在',
                                     showClose: true
                                 })
                             }
                         }).catch((err) => {
+                            console.log(err)
                             this.$message({
                                 type: 'error',
                                 message: '网络错误，请重试',

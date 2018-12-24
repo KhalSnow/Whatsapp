@@ -23,3 +23,11 @@ export function logIn(data) {
         data
     })
 }
+
+export function signUp(data) {
+    return request({
+        url: '/signup/signup',
+        method: 'post',
+        data
+    })
+}

@@ -4,10 +4,11 @@ import Login from '@/components/Login/Login.vue'
 import Signup from '@/components/Signup/Signup.vue'
 import User from '@/components/User/User.vue'
 import Chart from '@/components/Chart/Chart.vue'
+//import store from '@/vuex/index'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/login',
@@ -15,7 +16,7 @@ export default new Router({
       component: Login
     },
     {
-      path: '/Signup',
+      path: '/signup',
       name: 'Signup',
       component: Signup
     },
@@ -31,3 +32,21 @@ export default new Router({
     }
   ]
 })
+
+// router.beforeEach((to, from, next) => {
+//   let token = store.state.token
+//   if (to.meta.requiresAuth) {
+//     if (token) {
+//       next()
+//     } else {
+//       next({
+//         path: '/login',
+//         query: { redirect: to.fullPath }
+//       })
+//     }
+//   } else {
+//     next()
+//   }
+// })
+
+export default router

@@ -61,22 +61,26 @@
             <el-table-column
                 prop="id"
                 label="编号"
-                column-key="id">
+                column-key="id"
+                width=100px>
             </el-table-column>
             <el-table-column
                 prop="wp_tag_id"
                 label="标签编号"
-                column-key="wp_tag_id">
+                column-key="wp_tag_id"
+                width=80px>
             </el-table-column>
             <el-table-column
                 prop="wp_tag_name"
                 label="标签名"
-                column-key="wp_tag_name">
+                column-key="wp_tag_name"
+                width=160px>
             </el-table-column>
             <el-table-column
                 prop="wp_group_id"
                 label="群组编号"
-                column-key="wp_group_id">
+                column-key="wp_group_id"
+                width=100px>
             </el-table-column>
             <el-table-column
                 prop="wp_group_name"
@@ -86,12 +90,14 @@
             <el-table-column
                 prop="wp_group_color"
                 label="群组颜色"
-                column-key="wp_group_color">
+                column-key="wp_group_color"
+                width=100px>
             </el-table-column>
             <el-table-column
                 prop="wp_lang"
                 label="语言"
-                column-key="wp_lang">
+                column-key="wp_lang"
+                width=80px>
             </el-table-column>
             <el-table-column
                 prop="wp_group_link"
@@ -102,7 +108,8 @@
                 prop="tt"
                 label="时间"
                 column-key="tt"
-                :formatter="dateTimeFormatter">
+                :formatter="dateTimeFormatter"
+                width=160px>
             </el-table-column>
         </el-table>
 

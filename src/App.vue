@@ -6,7 +6,7 @@
                     <h3>Whatsapp简易后台管理系统</h3>
                     <div>
                         <el-button float="right" @click="login" size="mini">登录</el-button>
-                        <el-button float="right" @click="logout" size="mini">注册</el-button>
+                        <el-button float="right" @click="signup" size="mini">注册</el-button>
                     </div>
                 </div>
             </el-header>
@@ -30,8 +30,8 @@
             login() {
                 this.$router.replace('/login')
             },
-            logout() {
-                this.$store.dispatch('logout')
+            signup() {
+                this.$router.replace('/signup')
             }
         },
         computed: {
