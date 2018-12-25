@@ -195,7 +195,7 @@
                 this.fullscreenLoading = true
                 setTimeout(() => {
                     this.fullscreenLoading = false;
-                }, 2800)
+                }, 2000)
                 await this.xAxisData()
                 await this.yAxisData()
                 var myChart = echarts.init(document.getElementById('chart'))

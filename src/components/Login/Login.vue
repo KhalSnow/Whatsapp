@@ -8,7 +8,8 @@
                 <el-input type="password" v-model="user.password" placeholder="请输入密码" clearable></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" icon="el-icon-upload" @click="login">登录</el-button>
+                <el-button type="primary" @click="login">登录</el-button>
+                <el-button type="primary" @click="signup">注册</el-button>
             </el-form-item>
         </el-form>
     </el-row>
@@ -19,16 +20,6 @@
 
     export default {
         data() {
-            // var validatePass = (rule, value, callback) => {
-            //     if (value === '') {
-            //         callback(new Error("请输入密码"))
-            //     } else {
-            //         if (this.user.checkPass !== '') {
-            //             this.$refs.user.validateField('checkPass')
-            //         }
-            //         callback()
-            //     }
-            // }
             return {
                 user: {name: "", password: "" },
                 rules: {
