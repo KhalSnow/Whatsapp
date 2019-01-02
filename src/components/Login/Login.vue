@@ -21,7 +21,7 @@
     export default {
         data() {
             return {
-                user: {name: "", password: "" },
+                user: {name: "", password: ""},
                 rules: {
                     name: [
                         {required: true, message: "用户名不能为空", trigger: "blur"},
@@ -69,6 +69,9 @@
                         return false
                     }
                 })
+            },
+            signup() {
+                this.$router.replace('/signup')
             }
         }
     }

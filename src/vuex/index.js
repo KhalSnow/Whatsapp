@@ -5,22 +5,32 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        user: undefined
+        user: '',
+        token: window.sessionStorage.getItem('token')
     },
     mutations: {
-        login (state, payload) {
+        login: (state, payload, data) => {
             state.user = payload
+            state.token = data
+            window.sessionStorage.setItem('token', data)
         },
-        signup (state) {
+        signup: (state) => {
             state.user = undefined
+        },
+        logout: (state) => {
+            state.token = null
+            window.sessionStorage.removeItem('token')
         }
     },
     actions: {
-        login (context, payload) {
-            context.commit('login', payload)
+        UserLogin({ commit }, data){
+            commit('login', data)
         },
-        signup (context) {
-            context.commit('signup')
+        UserLogout({ commit }){
+            commit('logout')
+        },
+        UserName({ commit }, data){
+            commit('USERNAME', data)
         }
     }
 })

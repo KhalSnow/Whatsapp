@@ -8,6 +8,14 @@ export function selectedUser(data) {
     })
 }
 
+export function selectedPage(data) {
+    return request({
+        url: '/users/page',
+        method: 'post',
+        data
+    })
+}
+
 export function makeChart(data) {
     return request({
         url: '/users/chart',

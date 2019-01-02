@@ -72,7 +72,7 @@
                                         message: '注册成功，请登陆',
                                         duration: 2000
                                     })
-                                    this.$router.replace("/login")
+                                    this.$router.replace("/")
                                 })
                             } else {
                                 this.$message({

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-row class="tac">
+        <el-row>
             <el-col>
                 <el-menu
                     class="el-menu-vertical-demo"

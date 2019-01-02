@@ -1,5 +1,5 @@
 <template>
-    <div id="main">
+    <div>
         <el-form :inline="true">
             <el-form-item>
                 <el-row class="demo-autocomplete">
@@ -127,7 +127,7 @@
 </template>
 
 <script>
-    import { selectedUser } from '@/api/get/get.js'
+    import { selectedUser, selectedPage } from '@/api/get/get.js'
     const echarts = require('echarts')
 
     export default {
@@ -204,20 +204,33 @@
         methods: {
             fetchData() {
                 this.datetime()
-                selectedUser({"wp_tag_name": this.wpTagName, "wp_lang": this.wpLang, "tt1": this.dateTime[0], "tt2": this.dateTime[1], "pageSize": this.pageSize, "currentPage": this.currentPage}).then(response => {
+                selectedUser({"wp_tag_name": this.wpTagName, "wp_lang": this.wpLang, "tt1": this.dateTime[0], "tt2": this.dateTime[1]}).then(response => {
+                    console.log(response.data.data)
+                    this.tableData = response.data.data[1]
+                    this.cacheData = response.data.data[1]
+                    this.totalNumber = response.data.data[0]
+                })
+                this.currentPage = 1
+            },
+            handleSizeChange: function(size) {
+                this.pageSize = size
+                this.datetime()
+                selectedPage({"wp_tag_name": this.wpTagName, "wp_lang": this.wpLang, "tt1": this.dateTime[0], "tt2": this.dateTime[1], "pageSize": this.pageSize, "currentPage": this.currentPage}).then(response => {
                     console.log(response.data.data)
                     this.tableData = response.data.data[1]
                     this.cacheData = response.data.data[1]
                     this.totalNumber = response.data.data[0]
                 })
             },
-            handleSizeChange: function(size) {
-                this.pageSize = size
-                this.fetchData()
-            },
             handleCurrentChange: function(currentPage) {
                 this.currentPage = currentPage
-                this.fetchData()
+                this.datetime()
+                selectedPage({"wp_tag_name": this.wpTagName, "wp_lang": this.wpLang, "tt1": this.dateTime[0], "tt2": this.dateTime[1], "pageSize": this.pageSize, "currentPage": this.currentPage}).then(response => {
+                    console.log(response.data.data)
+                    this.tableData = response.data.data[1]
+                    this.cacheData = response.data.data[1]
+                    this.totalNumber = response.data.data[0]
+                })
             },
             wpTagNameSearch(queryString, callback) {
                 var tagName = this.tagName
