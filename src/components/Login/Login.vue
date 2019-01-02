@@ -77,8 +77,8 @@
     }
 </script>
 
-<style rel="stylesheet/scss">
-    .login {
+<style>
+    /* .login {
         width: 400px;
         margin: 0 auto
     }
@@ -93,5 +93,5 @@
     .el-tabsitem {
         text-align: center;
         width: 60px;
-    }
+    } */
 </style>
